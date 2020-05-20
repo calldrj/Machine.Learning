@@ -1,0 +1,38 @@
+---
+title: "Variational Bayes Principal Components Analysis"
+author: "Tuan Nguyen"
+date: "4/23/2020"
+output: 
+  pdf_document: 
+    keep_tex: yes
+    latex_engine: xelatex
+---
+# Create a problem, implement the Principal Components Analysis (PCA) Variational Bayes inference technique.
+# Import package Rdimtools, an R suite of a number of dimension reduction and estimation methods.
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(Rdimtools)
+```
+# Generate helix-shaped data
+```{r}
+X <- aux.gensamples(n=160, noise=0.01, dname='helix')
+```
+# Run PCA and VBPCA inferences
+```{r}
+pca  <- do.pca(X, ndim=2, preprocess='center')
+vbpca  <- do.bpca(X, ndim=2, preprocess='center')
+```
+# Compare PCA and VBPCA by visualization
+```{r}
+opar <- par(no.readonly=TRUE)
+par(mfrow=c(1,2))
+plot(pca$Y, main='PCA')
+plot(vbpca$Y, main='VBPCA')
+par(opar)
+```
+# Print out parameter of the VBPCA algorithm
+```{r}
+cat('The algorithm converges after', vbpca$mp.itercount, 'iterations.\n')
+cat('Estimated squared sigma value:', vbpca$mp.sigma2, '.\n')
+```
+# The helix-shaped distribution of the posterior means of the latent variables is in identical shape of the standard PCA projections after 7 iterations.
